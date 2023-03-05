@@ -58,7 +58,7 @@ createApp({
                 for (let value of this.inputText) {
                     var index = this.charSet.indexOf(value)
                     if (index < 0 || index >= this.charSet.length) {
-                        mdui.alert('字符集错误')
+                        mdui.alert('输入文本内含有字符集以外的文本')
                         return
                     }
                     var bits = `${zeroStr}${(index).toString(2)}`.slice(-this.bitCount)
