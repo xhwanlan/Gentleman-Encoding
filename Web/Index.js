@@ -171,7 +171,10 @@ createApp({
                     let lastIndex = this.newRuleCharSet.lastIndexOf(this.newRuleCharSet[i])
 
                     if (lastIndex != i) {
-                        mdui.alert(`字符集中 "${this.newRuleCharSet[i]}" 有重复`)
+                        mdui.snackbar({
+                            message: `字符集中 "${this.newRuleCharSet[i]}" 有重复`,
+                            position: 'top'
+                        })
                         return
                     }
                 }
@@ -196,7 +199,10 @@ createApp({
                 SetDataString(JSON.stringify(json))
 
             } else {
-                mdui.alert("字符集长度不符合要求")
+                mdui.snackbar({
+                    message: `字符集长度不符合要求`,
+                    position: 'top'
+                })
             }
         }
     },
