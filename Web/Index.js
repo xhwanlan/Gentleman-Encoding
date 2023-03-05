@@ -43,7 +43,7 @@ createApp({
                 }
                 let str = strArray.join('')
                 strArray.length = 0
-                for (let i = 0; i < str.length - 1; i += this.bitCount) {
+                for (let i = 0; i < str.length; i += this.bitCount) {
                     strArray.push(this.charSet[parseInt(str.substring(i, i + this.bitCount), 2)])
                 }
                 this.result = strArray.join('')
@@ -67,7 +67,7 @@ createApp({
                 let str = strArray.join('')
                 str = str.substring(0, str.length - str.length % binaryZeroLength)
                 strArray.length = 0
-                for (let i = 0; i < str.length - 1; i += binaryZeroLength) {
+                for (let i = 0; i < str.length; i += binaryZeroLength) {
                     strArray.push(parseInt(str.substring(i, i + binaryZeroLength), 2) ^ this.xorCode)
                 }
                 let decoder = new TextDecoder()
@@ -156,7 +156,7 @@ createApp({
             this.isDeleteRule = !this.isDeleteRule
         },
         DeleteRule(index) {
-            if (this.isDeleteRule) {
+            if (this.isDeleteRule && this.items[index]?.selected == false) {
                 let json = GetData()
                 this.items.splice(index, 1)
                 if (index >= defaultItemCount && index - defaultItemCount < json.length) {
