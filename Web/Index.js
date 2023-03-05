@@ -97,12 +97,20 @@ createApp({
                 })
             }
         },
-        Copy() {
-            navigator.clipboard.writeText(this.result)
-            mdui.snackbar({
-                message: '复制成功',
-                position: 'top',
-            })
+        async Copy() {
+            let clipboard = navigator.clipboard
+            if (clipboard == undefined) {
+                mdui.snackbar({
+                    message: '浏览器不支持复制',
+                    position: 'top'
+                })
+            } else {
+                await clipboard.writeText(this.result)
+                mdui.snackbar({
+                    message: '复制成功',
+                    position: 'top',
+                })
+            }
         },
         SaveRule() {
             let blob = new Blob([GetDataString()], { type: "application/json;charset=utf-8" });
