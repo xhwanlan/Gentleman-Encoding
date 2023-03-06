@@ -58,7 +58,7 @@
                 <li class="mdui-list-item mdui-ripple"
                     :class="{'mdui-list-item-active':item.selected,'mdui-shadow-5':item.selected}"
                     v-for="(item ,index) in items" @click="OnClickItem(index)">
-                    <div class="mdui-list-item-content">{{item.title}}</div>
+                    <div class="mdui-list-item-content mdui-text-truncate">{{item.title}}</div>
                     <div class="mdui-chip" @click="DeleteRule(index)">
                         <span class="mdui-chip-title">
                             <i class="mdui-icon material-icons"
