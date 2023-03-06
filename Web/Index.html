@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html>
 
 <head>
     <meta charset="utf-8">
@@ -24,10 +24,20 @@
                     <i class="mdui-icon material-icons mdui-text-color-white">menu</i>
                 </a>
 
-                <a href="javascript:;" class="mdui-typo-title mdui-text-color-white">君子码</a>
+                <a href="javascript:;" class="mdui-typo-title mdui-text-color-white">{{language.html.title}}</a>
+
                 <div class="mdui-toolbar-spacer"></div>
 
-                <i class="mdui-icon material-icons mdui-ripple mdui-ripple-white mdui-text-color-white">translate</i>
+                <i class="mdui-icon material-icons mdui-ripple mdui-ripple-white mdui-text-color-white"
+                    mdui-menu="{target: '#language'}">translate</i>
+                <ul class="mdui-menu" id="language">
+                    <li class="mdui-menu-item">
+                        <a class="mdui-ripple" @click="ChangeLanguage('cn')">简体中文</a>
+                    </li>
+                    <li class="mdui-menu-item">
+                        <a class="mdui-ripple" @click="ChangeLanguage('en')">English</a>
+                    </li>
+                </ul>
 
                 <a href="https://github.com/xhwanlan" target="_blank" title="github"
                     class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-white">
@@ -60,21 +70,24 @@
                 <li class="mdui-divider"></li>
                 <li>
                     <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="button"
-                        style="width:96%;" @click="NewRuleDialog" :disabled="isDeleteRule">新建规则</button>
+                        style="width:96%;" @click="NewRuleDialog"
+                        :disabled="isDeleteRule">{{language.html.btnNewRule}}</button>
                 </li>
                 <li>
                     <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="button"
-                        style="width:96%;" @click="DeleteRuleToggle">删除规则</button>
+                        style="width:96%;" @click="DeleteRuleToggle">{{language.html.btnDeleteRule}}</button>
                 </li>
                 <li>
                     <input type="file" ref="file" @change="LoadRule" style="width:96%;display: none;" placeholder="file"
                         title="rule file" />
                     <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="button"
-                        @click="OnClickLoadButton" style="width:96%;" :disabled="isDeleteRule">导入规则</button>
+                        @click="OnClickLoadButton" style="width:96%;"
+                        :disabled="isDeleteRule">{{language.html.btnLoadRule}}</button>
                 </li>
                 <li>
                     <button class="mdui-btn mdui-btn-raised mdui-ripple mdui-color-theme-accent" type="button"
-                        @click="SaveRule" style="width:96%;" :disabled="isDeleteRule">导出规则</button>
+                        @click="SaveRule" style="width:96%;"
+                        :disabled="isDeleteRule">{{language.html.btnSaveRule}}</button>
                 </li>
             </ul>
         </div>
@@ -82,11 +95,11 @@
         <div class="mdui-container">
             <div class="mdui-card mdui-p-a-1 mdui-m-t-1">
                 <div class="mdui-textfield mdui-textfield-floating-label">
-                    <label class="mdui-textfield-label">编码集</label>
+                    <label class="mdui-textfield-label">{{language.html.characterSet}}</label>
                     <input class="mdui-textfield-input" type="text" disabled title="Character Set" :value="charSet" />
                 </div>
                 <div class="mdui-textfield mdui-textfield-floating-label">
-                    <label class="mdui-textfield-label">异或码</label>
+                    <label class="mdui-textfield-label">{{language.html.xorCode}}</label>
                     <input class="mdui-textfield-input" type="number" max="255" min="0" :value="xorCode"
                         title="Xor Code" @input="OnInputXorCode" />
                 </div>
@@ -94,18 +107,20 @@
 
             <div class="mdui-p-a-1 mdui-m-y-1">
                 <div class="mdui-textfield mdui-textfield-floating-label">
-                    <label class="mdui-textfield-label">文本</label>
+                    <label class="mdui-textfield-label">{{language.html.inputText}}</label>
                     <textarea class="mdui-textfield-input" v-model="inputText"></textarea>
                 </div>
 
                 <div class="mdui-row-xs-2">
                     <div class="mdui-col">
                         <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-center"
-                            style="width:96%;" type="button" @click="Encode" :disabled="deleteRule">编码</button>
+                            style="width:96%;" type="button" @click="Encode"
+                            :disabled="deleteRule">{{language.html.btnEncode}}</button>
                     </div>
                     <div class="mdui-col">
                         <button class="mdui-btn mdui-btn-raised mdui-color-theme-accent mdui-ripple mdui-center"
-                            style="width:96%;" type="button" @click="Decode" :disabled="deleteRule">解码</button>
+                            style="width:96%;" type="button" @click="Decode"
+                            :disabled="deleteRule">{{language.html.btnDecode}}</button>
                     </div>
                 </div>
             </div>
@@ -125,11 +140,11 @@
         </div>
 
         <div class="mdui-dialog mdui-container mdui-p-a-1" style="overflow: visible;" id="new-rule">
-            <h5>新建规则</h5>
+            <h5>{{language.html.newRuleHTitle}}</h5>
             <div class="mdui-row">
                 <div class="mdui-col-xs-2">
                     <div class="mdui-textfield mdui-textfield-floating-label" style="overflow: visible;">
-                        <label class="mdui-textfield-label">字符集长度</label>
+                        <label class="mdui-textfield-label">{{language.html.characterSetLen}}</label>
                         <select class="mdui-select mdui-textfield-input" mdui-select v-model="newRuleSetNum"
                             title="number">
                             <option value="2">2</option>
@@ -145,7 +160,7 @@
                 </div>
                 <div class="mdui-col-xs-10">
                     <div class="mdui-textfield mdui-textfield-floating-label">
-                        <label class="mdui-textfield-label">字符集</label>
+                        <label class="mdui-textfield-label">{{language.html.characterSet}}</label>
                         <input class="mdui-textfield-input" type="text" :maxlength="newRuleSetNum" title="Character Set"
                             v-model="newRuleCharSet" />
                     </div>
@@ -154,13 +169,13 @@
             <div class="mdui-row   mdui-valign">
                 <div class="mdui-col-xs-9">
                     <div class="mdui-textfield mdui-textfield-floating-label mdui-m-b-1">
-                        <label class="mdui-textfield-label">标题</label>
+                        <label class="mdui-textfield-label">{{language.html.newRuleTitle}}</label>
                         <input class="mdui-textfield-input" type="text" v-model="newRuleTitle" title="Rule Title" />
                     </div>
                 </div>
                 <div class="mdui-col-xs-2">
                     <div class="mdui-textfield mdui-textfield-floating-label mdui-m-b-1">
-                        <label class="mdui-textfield-label">异或码</label>
+                        <label class="mdui-textfield-label">{{language.html.xorCode}}</label>
                         <input class="mdui-textfield-input" type="number" min="0" max="255" v-model="newRuleXorCode"
                             title="Xor Code" />
                     </div>

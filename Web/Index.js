@@ -2,9 +2,65 @@ const { createApp } = Vue
 const binaryZero = '00000000'
 const binaryZeroLength = binaryZero.length
 const powersOfTwoSet = [2, 4, 8, 16, 32, 64, 128, 256]
-const dataKey = "Data"
+const dataKey = 'Data'
 const defaultItemCount = 1
-const ruleFileName = "Gentleman Encoding Rule.json"
+const ruleFileName = 'Gentleman Encoding Rule.json'
+
+const languageKey = 'languageKey'
+const languages = {
+    'english': {
+        'html': {
+            'title': 'Gentleman Encoding',
+            'btnNewRule': 'NEW RULE',
+            'btnDeleteRule': 'DELETE RULE',
+            'btnSaveRule': 'SAVE RULE',
+            'btnLoadRule': 'Load RULE',
+            'characterSet': 'Character Set',
+            'xorCode': 'XOR Code',
+            'inputText': 'Input Text',
+            'btnEncode': 'ENCODE',
+            'btnDecode': 'DECODE',
+            'newRuleHTitle': 'NEW RULE',
+            'characterSetLen': 'Character Set Length',
+            'newRuleTitle': 'rule title',
+        },
+        'script': {
+            'errorUnsupported': 'The browser does not support this feature',
+            'errorDecode': 'The input text contains characters outside the character set',
+            'copySucceeded': 'Text copied',
+            'copyFailed': 'Copy error',
+            'errorNewRuleChar': 'The character set contains duplicate characters: ',
+            'errorNewRuleLen': 'The character set length is invalid',
+            'errorEmptyInputText': 'The input text cannot be empty'
+        }
+    },
+    'chinese': {
+        'html': {
+            'title': '君子码',
+            'btnNewRule': '新建规则',
+            'btnDeleteRule': '删除规则',
+            'btnSaveRule': '导出规则',
+            'btnLoadRule': '加载规则',
+            'characterSet': '字符集',
+            'xorCode': '异或码',
+            'inputText': '文本',
+            'btnEncode': '编码',
+            'btnDecode': '解码',
+            'newRuleHTitle': '新建规则',
+            'characterSetLen': '字符集长度',
+            'newRuleTitle': '显示标题',
+        },
+        'script': {
+            'errorUnsupported': '浏览器不支持该功能',
+            'errorDecode': '输入文本内含有字符集以外的文本：',
+            'copySucceeded': '复制成功',
+            'copyFailed': '复制失败',
+            'errorNewRuleChar': '字符集含有重复字符：',
+            'errorNewRuleLen': '字符集长度不符合要求',
+            'errorEmptyInputText': '文本不能为空'
+        }
+    }
+}
 
 createApp({
     data() {
@@ -14,20 +70,27 @@ createApp({
             charSet: '',
             bitCount: 0,
             xorCode: 0,
-            items: [{ title: "君子八雅", charSet: "琴棋书画诗酒花茶", xorCode: 0, select: true, canDelete: false }],
+            items: [{ title: '君子八雅', charSet: '琴棋书画诗酒花茶', xorCode: 0, select: true, canDelete: false }],
 
             newRuleDialog: null,
             isDeleteRule: false,
 
             newRuleSetNum: powersOfTwoSet[1],
-            newRuleCharSet: "",
+            newRuleCharSet: '',
             newRuleXorCode: 0,
-            newRuleTitle: ""
+            newRuleTitle: '',
+
+            language: null,
         }
     },
     methods: {
         Encode() {
             if (window.TextEncoder !== undefined) {
+                if (this.inputText.length == 0) {
+                    mdui.alert(this.language.script.errorEmptyInputText)
+                    return
+                }
+
                 let strArray = []
                 let encoder = new TextEncoder()
                 encoder.encode(this.inputText).forEach(value => {
@@ -48,17 +111,22 @@ createApp({
                 }
                 this.result = strArray.join('')
             } else {
-                mdui.alert('该浏览器不支持该功能')
+                mdui.alert(this.language.script.errorUnsupported)
             }
         },
         Decode() {
             if (window.TextDecoder !== undefined) {
+                if (this.inputText.length == 0) {
+                    mdui.alert(this.language.script.errorEmptyInputText)
+                    return
+                }
+
                 let strArray = []
                 let zeroStr = binaryZero.slice(-this.bitCount)
                 for (let value of this.inputText) {
                     var index = this.charSet.indexOf(value)
                     if (index < 0 || index >= this.charSet.length) {
-                        mdui.alert('输入文本内含有字符集以外的文本')
+                        mdui.alert(`${this.language.script.errorDecode}${value}`)
                         return
                     }
                     var bits = `${zeroStr}${(index).toString(2)}`.slice(-this.bitCount)
@@ -73,7 +141,7 @@ createApp({
                 let decoder = new TextDecoder()
                 this.result = decoder.decode(new Uint8Array(strArray))
             } else {
-                mdui.alert('该浏览器不支持该功能')
+                mdui.alert(this.language.script.errorUnsupported)
             }
         },
         OnInputXorCode(event) {
@@ -101,19 +169,19 @@ createApp({
             let clipboard = navigator.clipboard
             if (clipboard == undefined) {
                 mdui.snackbar({
-                    message: '浏览器不支持复制',
+                    message: this.language.script.copyFailed,
                     position: 'top'
                 })
             } else {
                 await clipboard.writeText(this.result)
                 mdui.snackbar({
-                    message: '复制成功',
+                    message: this.language.script.copySucceeded,
                     position: 'top',
                 })
             }
         },
         SaveRule() {
-            let blob = new Blob([GetDataString()], { type: "application/json;charset=utf-8" });
+            let blob = new Blob([GetDataString()], { type: 'application/json;charset=utf-8' });
 
             let urlObject = window.URL || window.webkitURL || window
             let url = urlObject.createObjectURL(blob)
@@ -172,7 +240,7 @@ createApp({
 
                     if (lastIndex != i) {
                         mdui.snackbar({
-                            message: `字符集中 "${this.newRuleCharSet[i]}" 有重复`,
+                            message: `${this.language.script.errorNewRuleChar}${this.newRuleCharSet[i]}`,
                             position: 'top'
                         })
                         return
@@ -200,10 +268,14 @@ createApp({
 
             } else {
                 mdui.snackbar({
-                    message: `字符集长度不符合要求`,
+                    message: this.language.script.errorNewRuleLen,
                     position: 'top'
                 })
             }
+        },
+        ChangeLanguage(key) {
+            SaveLanguage(key)
+            this.language = GetLanguage()
         }
     },
     watch: {
@@ -224,6 +296,9 @@ createApp({
                 }
             }
         }
+    },
+    created() {
+        this.language = GetLanguage()
     },
     mounted() {
         let json = GetData()
@@ -250,4 +325,35 @@ function GetDataString() {
 
 function SetDataString(string) {
     localStorage.setItem(dataKey, string)
+}
+
+function GetLanguage() {
+    let language = null
+    let key = localStorage.getItem(languageKey)
+    if (key == null) {
+        key = navigator.language.toLocaleLowerCase()
+        if (key.indexOf('cn')) {
+            SaveLanguage('cn')
+            language = languages['chinese']
+        } else {
+            SaveLanguage('en')
+            language = languages['english']
+        }
+    } else {
+        switch (key) {
+            case 'cn':
+                language = languages['chinese']
+                break
+            default:
+                language = languages['english']
+                break
+        }
+    }
+
+    document.title = language.html.title
+    return language
+}
+
+function SaveLanguage(key) {
+    localStorage.setItem(languageKey, key)
 }
