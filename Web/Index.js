@@ -178,12 +178,12 @@ createApp({
                         message: this.language.script.copySucceeded,
                         position: 'top',
                     })
-                }).catch(err => {
+                }, (() => {
                     mdui.snackbar({
                         message: this.language.script.copyFailed,
                         position: 'top',
                     })
-                })
+                }))
             }
         },
         SaveRule() {
