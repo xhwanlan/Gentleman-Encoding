@@ -173,10 +173,16 @@ createApp({
                     position: 'top'
                 })
             } else {
-                await clipboard.writeText(this.result)
-                mdui.snackbar({
-                    message: this.language.script.copySucceeded,
-                    position: 'top',
+                await clipboard.writeText(this.result).then(() => {
+                    mdui.snackbar({
+                        message: this.language.script.copySucceeded,
+                        position: 'top',
+                    })
+                }).catch(err => {
+                    mdui.snackbar({
+                        message: this.language.script.copyFailed,
+                        position: 'top',
+                    })
                 })
             }
         },
