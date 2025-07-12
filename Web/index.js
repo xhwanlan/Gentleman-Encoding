@@ -14,7 +14,7 @@ const languages = {
             'btnNewRule': 'NEW RULE',
             'btnDeleteRule': 'DELETE RULE',
             'btnSaveRule': 'SAVE RULE',
-            'btnLoadRule': 'Load RULE',
+            'btnLoadRule': 'LOAD RULE',
             'characterSet': 'Character Set',
             'xorCode': 'XOR Code',
             'inputText': 'Input Text',
